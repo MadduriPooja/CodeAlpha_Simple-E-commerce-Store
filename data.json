@@ -1,0 +1,56 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Laptop",
+      "description": "Basic laptop",
+      "price": 500,
+      "image": "images/laptop.png"
+    },
+    {
+      "id": 2,
+      "name": "Smartphone",
+      "description": "Smartphone",
+      "price": 300,
+      "image": "images/smartphone.png"
+    },
+    {
+      "id": 3,
+      "name": "Wireless Headphones",
+      "description": "Over-ear headphones",
+      "price": 100,
+      "image": "images/headphones.png"
+    }
+  ],
+  "users": [
+    {
+      "username": "a",
+      "password": "$2b$10$.PGGJZL3LpfzzwWZu./20e3P5UNBfAGGAK4VJRKp6pRhR3UTJHkq."
+    }
+  ],
+  "orders": [
+    {
+      "user": "a",
+      "items": []
+    },
+    {
+      "user": "a",
+      "items": [
+        2
+      ]
+    },
+    {
+      "user": "a",
+      "items": [
+        2
+      ]
+    },
+    {
+      "user": "a",
+      "items": [
+        3,
+        3
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Neon E-Commerce</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-page">
+  <div class="login-container glass-panel">
+    <h2>Welcome Back</h2>
+    <p class="login-subtitle">Sign in to continue your shopping journey</p>
+    
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter your username" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required>
+      </div>
+      
+      <button type="submit" class="btn-primary">Sign In</button>
+    </form>
+    
+    <div class="login-footer">
+      <p>New to our store? <a href="#" onclick="register()">Create an account</a></p>
+    </div>
+  </div>
+
+  <script src="utils.js"></script>
+  <script>
+    async function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      
+      if (res.ok) {
+        showToast('Login successful!', 'success');
+        setTimeout(() => window.location.href = '/index.html', 1000);
+      } else {
+        showToast('Invalid credentials. Please try again.', 'error');
+      }
+    }
+
+    function register() {
+      const username = prompt("Enter new username:");
+      const password = prompt("Enter new password:");
+      if (username && password) {
+        fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        }).then(res => {
+          if (res.ok) showToast("Account created successfully!", "success");
+          else showToast("User already exists", "error");
+        });
+      }
+    }
+  </script>
+</body>
+</html>

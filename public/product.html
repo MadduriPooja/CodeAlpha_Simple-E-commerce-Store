@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details | Neon E-Commerce</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">NEON STORE</a>
+      <nav>
+        <a href="index.html">Shop</a>
+        <a href="cart.html">View Cart</a>
+        <button onclick="logout()" class="btn-logout">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div style="max-width: 900px; margin: 0 auto; padding-top: 2rem;">
+      <div id="details" class="glass-panel" style="display: flex; gap: 3rem; padding: 3rem; align-items: center; flex-wrap: wrap; justify-content: center;">
+        <!-- Details will be loaded here -->
+      </div>
+    </div>
+  </main>
+
+  <script src="utils.js"></script>
+  <script>
+    async function loadProduct() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const res = await fetch('/api/product/' + id);
+        
+        if (res.status === 401) {
+          window.location.href = '/login.html';
+          return;
+        }
+        
+        const p = await res.json();
+        document.getElementById('details').innerHTML = `
+          <div style="flex: 1; min-width: 300px; display: flex; justify-content: center;">
+            <div class="product-image-container" style="margin-bottom: 0; width: 100%; max-width: 400px; height: auto; aspect-ratio: 1;">
+              <img src="${p.image || '/images/placeholder.png'}" alt="${p.name}" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+          </div>
+          <div style="flex: 1; min-width: 300px;">
+            <h1 style="font-size: 3rem; margin-bottom: 1rem; font-family: 'Montserrat', sans-serif;">${p.name}</h1>
+            <div style="font-size: 1.5rem; color: var(--accent-secondary); font-weight: 700; margin-bottom: 2rem;">$${p.price.toFixed(2)}</div>
+            <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 3rem;">${p.description}</p>
+            <div class="product-actions" style="grid-template-columns: 1fr;">
+              <button class="btn-primary" onclick="addToCart(${p.id})" style="padding: 1.25rem;">Add to Shopping Cart</button>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        console.error("Failed to load product details:", err);
+        showToast("Error loading product details", "error");
+      }
+    }
+
+    async function addToCart(id) {
+      const res = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: id })
+      });
+      
+      if (res.ok) {
+        showToast("Successfully added to cart!", "success");
+      } else if (res.status === 401) {
+        window.location.href = '/login.html';
+      } else {
+        showToast("Error adding to cart", "error");
+      }
+    }
+
+    async function logout() {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.href = '/login.html';
+    }
+
+    loadProduct();
+  </script>
+</body>
+</html>
